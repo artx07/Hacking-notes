@@ -1,0 +1,16 @@
+
+import os
+from plaid import Client
+
+# Ensure your secret key is stored in an environment variable
+PLAID_CLIENT_ID = os.getenv('PLAID_CLIENT_ID')
+PLAID_SECRET = os.getenv('PLAID_SECRET')
+PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' as needed
+
+client = Client(client_id=PLAID_CLIENT_ID, secret=PLAID_SECRET, environment=PLAID_ENV)
+
+try:
+    response = client.Institutions.get(10, offset=0)
+    print('Plaid key is working. Here are some institutions:', response['institutions'])
+except Exception as e:
+    print('Error testing Plaid key:', e)
