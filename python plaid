@@ -1,16 +1,41 @@
 
+from plaid.api import plaid_api
+from plaid.model.products import Products
+from plaid.model.country_code import CountryCode
+from plaid.model.institutions_get_request import InstitutionsGetRequest
+from plaid.model.institutions_get_request_options import InstitutionsGetRequestOptions
+from plaid.configuration import Configuration
+from plaid.api_client import ApiClient
 import os
-from plaid import Client
 
-# Ensure your secret key is stored in an environment variable
+# Ensure your secret key is stored in environment variables
 PLAID_CLIENT_ID = os.getenv('PLAID_CLIENT_ID')
 PLAID_SECRET = os.getenv('PLAID_SECRET')
 PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' as needed
 
-client = Client(client_id=PLAID_CLIENT_ID, secret=PLAID_SECRET, environment=PLAID_ENV)
+# Configure the Plaid API client
+configuration = Configuration(
+    host="https://sandbox.plaid.com",  # Change to 'https://development.plaid.com' or 'https://production.plaid.com'
+    api_key={
+        "clientId": PLAID_CLIENT_ID,
+        "secret": PLAID_SECRET
+    }
+)
 
+api_client = ApiClient(configuration)
+client = plaid_api.PlaidApi(api_client)
+
+# Create a request object
+request = InstitutionsGetRequest(
+    count=10,
+    offset=0
+)
+
+# Fetch institutions
 try:
-    response = client.Institutions.get(10, offset=0)
-    print('Plaid key is working. Here are some institutions:', response['institutions'])
+    response = client.institutions_get(request)
+    institutions = response['institutions']
+    print('Plaid key is working. Here are some institutions:', institutions)
 except Exception as e:
     print('Error testing Plaid key:', e)
+
