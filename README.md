@@ -1,3 +1,3 @@
-# SimpleTelegramShell
+# My hacking notes
 
-A Simple Shell with telegram bot
+Here I'll add some useful notes, payloads and my own scripts
