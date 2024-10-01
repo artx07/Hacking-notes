@@ -1,0 +1,3 @@
+avoid xss in salesforce
+using V 
+<input type="text" name="firstname" value="%%=v(@name)=%%" required>
