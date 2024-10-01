@@ -1,3 +1,9 @@
 avoid xss in salesforce
-using V 
+using V for ampscript
+
+
+<label for="firstname">First Name:</label>
+<input type="text" name="firstname" id="firstname" value="%%=v(@name)=%%" required>
+
+
 <input type="text" name="firstname" value="%%=v(@name)=%%" required>
