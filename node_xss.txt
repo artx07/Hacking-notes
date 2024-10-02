@@ -1,0 +1,56 @@
+    const express = require('express');
+    const escapeHtml = require('escape-html'); // This acts like AMPscript's v() function
+    const app = express();
+    const port = 3000;
+
+    // Route to serve the vulnerable page
+    app.get('/', (req, res) => {
+
+        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; object-src 'none'; style-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+        
+        const userInput2 = escapeHtml(req.query.param2 || 'No input provided'); // Secure, escapes HTML
+        const userInput = req.query.param || 'No input provided'; // Insecure
+
+
+        // Unsafe: directly injecting user input into the attributes of an input field
+        const html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>XSS Test</title>
+            </head>
+            <body>
+                <h1>XSS Attribute Injection with node</h1>
+
+                <p>Reflected user input into an attribute context (unsafe):</p>
+                
+                <!-- The user input is directly injected into the input field's attributes -->
+                
+
+                <input type="text" ${userInput2} placeholder="Input field vulnerable to XSS" />
+                <input type="text" ${userInput} placeholder="Input field vulnerable to XSS" />
+                <!-- Secure: Wrap user input inside quotes to prevent injection of new attributes -->
+
+                <!--<input type="text" value="${userInput2}" placeholder="Input field safely escaped" />-->
+                <!-- AMPscript with proper quoting -->
+                <!--<input type="text" name="firstname" value="%%=v(@name)=%%" required>-->
+
+                <p>Injected attributes: ${userInput2}</p>
+                <p>Injected attributes: ${userInput}</p>
+
+
+
+            </body>
+            </html>
+        `;
+
+        // Send the HTML back to the client
+        res.send(html);
+    });
+
+    // Start the server
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
