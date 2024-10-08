@@ -1,0 +1,16 @@
+rules:
+  - id: detect-payload-assignment-from-request
+    patterns:
+      - pattern: |
+          const $PAYLOAD = $REQ.body;
+    message: "Detected assignment of payload from req.body. Ensure input validation and sanitization."
+    severity: WARNING
+    languages:
+      - javascript
+      - typescript
+    metadata:
+      references:
+        - "https://semgrep.dev/docs/writing-rules/pattern-syntax/"
+    tags:
+      - security
+      - input-validation
